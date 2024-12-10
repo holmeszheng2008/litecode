@@ -1,0 +1,17 @@
+# Data structure
+Array
+Linked list
+String
+Two pointers
+Hash
+Stack
+Queue
+Heap
+Binary tree
+Graph
+DFS & BFS
+Trie
+
+
+
+

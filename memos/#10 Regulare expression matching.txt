@@ -1,0 +1,83 @@
+class Solution {
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        boolean[][] memo = solution.isMatch("aaa", "a*a");
+        for (int i = 0; i < memo.length; i++) {
+            for (int j = 0; j < memo[i].length; j++) {
+                System.out.print(memo[i][j]);
+                System.out.print('\t');
+            }
+            System.out.print('\n');
+        }
+    }
+
+    public boolean[][] isMatch(String s, String p) {
+        boolean[][] memo = new boolean[s.length() + 1][p.length() + 1];
+        for (int i = 0; i < s.length(); i++) {
+            memo[i][p.length()] = false;
+        }
+        memo[s.length()][p.length()] = true;
+        for (int i = s.length(); i >= 0; i--) {
+            int j = p.length() - 1;
+            if (i == s.length() - 1) {
+                memo[i][j] = (s.charAt(i) == p.charAt(j) || p.charAt(j) == '.') ? true : false;
+            } else {
+                memo[i][j] = false;
+            }
+
+        }
+
+        for (int j = p.length() - 2; j >= 0; j--) {
+            for (int i = s.length(); i >= 0; i--) {
+                if (i < s.length()) {
+                    //a
+                    if (s.charAt(i) == p.charAt(j) || p.charAt(j) == '.') {
+                        if (p.charAt(j + 1) == '*') {
+                            memo[i][j] = memo[i + 1][j] || memo[i][j + 2];
+                        } else {
+                            memo[i][j] = memo[i+1][j+1];
+                        }
+                    } else {
+                        if (p.charAt(j + 1) == '*') {
+                            memo[i][j] = memo[i][j + 2];
+                        } else {
+                            memo[i][j] = false;
+                        }
+                    }
+                } else {
+                    //b
+                    if (j+1 < p.length()) {
+                        if (p.charAt(j + 1) == '*') {
+                            memo[i][j] = memo[i][j+2];
+                        } else {
+                            memo[i][j] = false;
+                        }
+                    } else {
+                        memo[i][j] = false;
+                    }
+                }
+            }
+        }
+        return memo;
+    }
+
+    static class Hello {
+        public boolean[][] isMatch(String text, String pattern) {
+            boolean[][] dp = new boolean[text.length() + 1][pattern.length() + 1];
+            dp[text.length()][pattern.length()] = true;
+
+            for (int i = text.length(); i >= 0; i--) {
+                for (int j = pattern.length() - 1; j >= 0; j--) {
+                    boolean first_match = (i < text.length()
+                            && (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.'));
+                    if (j + 1 < pattern.length() && pattern.charAt(j + 1) == '*') {
+                        dp[i][j] = dp[i][j + 2] || first_match && dp[i + 1][j];
+                    } else {
+                        dp[i][j] = first_match && dp[i + 1][j + 1];
+                    }
+                }
+            }
+            return dp;
+        }
+    }
+}
